@@ -1,0 +1,173 @@
+:root {
+  --cor-fundo: #16181d;
+  --cor-card: #1f2229;
+  --cor-texto: #e4e6eb;
+  --cor-texto-secundario: #9aa0ab;
+  --cor-destaque: #e8871e;
+  --cor-erro: #ff6b6b;
+  --cor-erro-fundo: #2a1a1a;
+  --cor-sucesso: #6bff9b;
+  --cor-sucesso-fundo: #1a2a1e;
+}
+
+
+body {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: var(--cor-texto);
+  font-weight: 600;
+  text-align: center;
+}
+
+.card {
+  background-color: var(--cor-card);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  max-width: 300px;
+}
+
+.card p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+input,
+select {
+  background-color: var(--cor-card);
+  color: var(--cor-texto);
+  border: 1px solid #3a3d45;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  min-width: 245px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: transparent;
+  color: var(--cor-destaque);
+  border: 1px solid var(--cor-destaque);
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin-top: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--cor-destaque);
+  color: var(--cor-fundo);
+}
+
+.acoes {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-remover {
+  color: var(--cor-erro);
+  border-color: var(--cor-erro);
+}
+
+.btn-remover:hover {
+  background-color: var(--cor-erro);
+  color: var(--cor-fundo);
+}
+
+.mensagem {
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  max-width: 280px;
+  font-size: 13px;
+  border: 1px solid;
+}
+
+.mensagem-erro {
+  background-color: var(--cor-erro-fundo);
+  color: var(--cor-erro);
+  border-color: var(--cor-erro);
+}
+
+.mensagem-sucesso {
+  background-color: var(--cor-sucesso-fundo);
+  color: var(--cor-sucesso);
+  border-color: var(--cor-sucesso);
+}
+
+.secao {
+  margin-bottom: 32px;
+}
+
+form {
+  margin-bottom: 32px;
+}
+
+.alerta {
+  color: var(--cor-erro);
+  font-weight: 600;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+nav button {
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-secundario);
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background-color: var(--cor-card);
+  color: var(--cor-texto);
+}
+
+nav button.ativo {
+  background-color: var(--cor-card);
+  color: var(--cor-destaque);
+  font-weight: 600;
+}
+
+.layout {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: auto;
+  }
+}
