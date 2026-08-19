@@ -8,7 +8,9 @@ types.setTypeParser(1114, (str) => new Date(str + 'Z'));
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://estetica-automotiva-orpin.vercel.app'
+}));
 app.use(express.json());
 
 const pool = new Pool({
