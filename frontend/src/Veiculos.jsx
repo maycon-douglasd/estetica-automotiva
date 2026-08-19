@@ -12,7 +12,7 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   const [clientes, setClientes] = useState([])
 
   async function buscarVeiculos() {
-    const resposta = await fetch('http://localhost:3000/veiculos')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
     const dados = await resposta.json()
     setVeiculos(dados)
   }
@@ -20,11 +20,11 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   async function cadastrarVeiculo(e) {
     e.preventDefault()
 
-    let url = 'http://localhost:3000/veiculos'
+    let url = `${import.meta.env.VITE_API_URL}/veiculos`
     let metodo = 'POST'
 
     if (veiculoEditando) {
-      url = `http://localhost:3000/veiculos/${veiculoEditando.id}`
+      url = `${import.meta.env.VITE_API_URL}/veiculos/${veiculoEditando.id}`
       metodo = 'PUT'
     }
 
@@ -59,7 +59,7 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   }
 
   async function removerVeiculo(id) {
-    const resposta = await fetch(`http://localhost:3000/veiculos/${id}`, { method: 'DELETE' })
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos/${id}`, { method: 'DELETE' })
     const dados = await resposta.json()
     if (dados.erro) {
       setMensagem(dados.erro)
@@ -86,7 +86,7 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   }
 
   async function buscarClientes() {
-    const resposta = await fetch('http://localhost:3000/clientes')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
     const dados = await resposta.json()
     setClientes(dados)
   }

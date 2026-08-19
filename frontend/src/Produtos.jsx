@@ -10,7 +10,7 @@ function Produtos({ setMensagem, setTipoMensagem }) {
     const [estoqueMinimo, setEstoqueMinimo] = useState('')
 
     async function buscarProdutos() {
-        const resposta = await fetch('http://localhost:3000/produtos')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`)
         const dados = await resposta.json()
         setProdutos(dados)
     }
@@ -18,7 +18,7 @@ function Produtos({ setMensagem, setTipoMensagem }) {
     async function cadastrarProduto(e) {
         e.preventDefault()
 
-        const resposta = await fetch('http://localhost:3000/produtos', {
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -47,7 +47,7 @@ function Produtos({ setMensagem, setTipoMensagem }) {
     }
 
     async function removerProduto(id) {
-        const resposta = await fetch(`http://localhost:3000/produtos/${id}`, { method: 'DELETE' })
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos/${id}`, { method: 'DELETE' })
         const dados = await resposta.json()
         if (dados.erro) {
             setMensagem(dados.erro)
@@ -60,7 +60,7 @@ function Produtos({ setMensagem, setTipoMensagem }) {
     }
 
     async function registrarMovimentacao(produtoId, tipo, quantidade) {
-        const resposta = await fetch('http://localhost:3000/movimentacoes', {
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/movimentacoes`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

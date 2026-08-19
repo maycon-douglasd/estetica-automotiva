@@ -8,14 +8,14 @@ function Despesas({ setMensagem, setTipoMensagem }) {
     const [valor, setValor] = useState('')
 
     async function buscarDespesas() {
-        const resposta = await fetch('http://localhost:3000/despesas')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`)
         const dados = await resposta.json()
         setDespesas(dados)
     }
 
     async function cadastrarDespesa(e) {
         e.preventDefault()
-        const resposta = await fetch('http://localhost:3000/despesas', {
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -39,7 +39,7 @@ function Despesas({ setMensagem, setTipoMensagem }) {
     }
 
     async function removerDespesa(id) {
-        const resposta = await fetch(`http://localhost:3000/despesas/${id}`, { method: 'DELETE' })
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/${id}`, { method: 'DELETE' })
         const dados = await resposta.json()
         if (dados.erro) {
             setMensagem(dados.erro)

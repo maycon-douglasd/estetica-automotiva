@@ -8,17 +8,17 @@ function Servicos({ setMensagem, setTipoMensagem }) {
     const [servicoEditando, setServicoEditando] = useState(null)
 
     async function buscarServicos() {
-        const resposta = await fetch('http://localhost:3000/servicos')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
         const dados = await resposta.json()
         setServicos(dados)
     }
 
     async function cadastrarServico(e) {
         e.preventDefault()
-        let url = 'http://localhost:3000/servicos'
+        let url = `${import.meta.env.VITE_API_URL}/servicos`
         let metodo = 'POST'
         if (servicoEditando) {
-            url = `http://localhost:3000/servicos/${servicoEditando.id}`
+            url = `${import.meta.env.VITE_API_URL}/servicos/${servicoEditando.id}`
             metodo = 'PUT'
         }
         const resposta = await fetch(url, {
@@ -44,7 +44,7 @@ function Servicos({ setMensagem, setTipoMensagem }) {
     }
 
     async function removerServico(id) {
-        const resposta = await fetch(`http://localhost:3000/servicos/${id}`, { method: 'DELETE' })
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos/${id}`, { method: 'DELETE' })
         const dados = await resposta.json()
         if (dados.erro) {
             setMensagem(dados.erro)

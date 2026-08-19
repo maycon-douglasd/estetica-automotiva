@@ -10,25 +10,25 @@ function Faturamento() {
 
 
   async function buscarFaturamentoMes() {
-    const resposta = await fetch('http://localhost:3000/faturamento')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento`)
     const dados = await resposta.json()
     setFaturamentoMes(dados)
   }
 
   async function buscarFaturamentoDia() {
-    const resposta = await fetch('http://localhost:3000/faturamento/dia')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/dia`)
     const dados = await resposta.json()
     setFaturamentoDia(dados)
   }
 
   async function buscarFaturamentoSemana() {
-    const resposta = await fetch('http://localhost:3000/faturamento/semana')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/semana`)
     const dados = await resposta.json()
     setFaturamentoSemana(dados)
   }
 
   async function buscarDespesasTotal() {
-    const resposta = await fetch('http://localhost:3000/despesas/total')
+    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/total`)
     const dados = await resposta.json()
     setDespesasTotal(Number(dados.despesas_total) || 0)
   }

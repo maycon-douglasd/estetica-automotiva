@@ -12,19 +12,19 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
     const [ordemEditando, setOrdemEditando] = useState(null)
 
     async function buscarOrdens() {
-        const resposta = await fetch('http://localhost:3000/ordem-servico')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/ordem-servico`)
         const dados = await resposta.json()
         setOrdens(dados)
     }
 
     async function buscarVeiculos() {
-        const resposta = await fetch('http://localhost:3000/veiculos')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
         const dados = await resposta.json()
         setVeiculos(dados)
     }
 
     async function buscarServicos() {
-        const resposta = await fetch('http://localhost:3000/servicos')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
         const dados = await resposta.json()
         setServicos(dados)
     }
@@ -37,10 +37,10 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
 
     async function cadastrarOrdem(e) {
         e.preventDefault()
-        let url = 'http://localhost:3000/ordem-servico'
+        let url = `${import.meta.env.VITE_API_URL}/ordem-servico`
         let metodo = 'POST'
         if (ordemEditando) {
-            url = `http://localhost:3000/ordem-servico/${ordemEditando.id}`
+            url = `${import.meta.env.VITE_API_URL}/ordem-servico/${ordemEditando.id}`
             metodo = 'PUT'
         }
         const resposta = await fetch(url, {
@@ -83,6 +83,7 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
                 <select value={veiculoId} onChange={(e) => setVeiculoId(e.target.value)} required>
                     <option value="">Selecione o veículo</option>
                     {veiculos.map((veiculo) => (
+
                         <option key={veiculo.id} value={veiculo.id}>
                             {veiculo.modelo} - {veiculo.placa}
                         </option>
@@ -92,6 +93,7 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
                 <select value={servicoId} onChange={(e) => setServicoId(e.target.value)} required>
                     <option value="">Selecione o serviço</option>
                     {servicos.map((servico) => (
+
                         <option key={servico.id} value={servico.id}>
                             {servico.nome}
                         </option>
@@ -100,7 +102,9 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
 
                 <select value={status} onChange={(e) => setStatus(e.target.value)} required>
                     <option value="">Selecione o status</option>
+
                     <option value="em andamento">Em andamento</option>
+                    
                     <option value="concluído">Concluído</option>
                 </select>
 

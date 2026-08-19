@@ -8,20 +8,20 @@ function Clientes({ setMensagem, setTipoMensagem }) {
     const [veiculos, setVeiculos] = useState([])
 
     async function buscarVeiculos() {
-        const resposta = await fetch('http://localhost:3000/veiculos')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
         const dados = await resposta.json()
         setVeiculos(dados)
     }
 
     async function buscarClientes() {
-        const resposta = await fetch('http://localhost:3000/clientes')
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
         const dados = await resposta.json()
         setClientes(dados)
     }
 
     async function cadastrarCliente(e) {
         e.preventDefault()
-        const resposta = await fetch('http://localhost:3000/clientes', {
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -43,7 +43,7 @@ function Clientes({ setMensagem, setTipoMensagem }) {
     }
 
     async function removerCliente(id) {
-        const resposta = await fetch(`http://localhost:3000/clientes/${id}`, { method: 'DELETE' })
+        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes/${id}`, { method: 'DELETE' })
         const dados = await resposta.json()
         if (dados.erro) {
             setMensagem(dados.erro)
