@@ -12,62 +12,75 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   const [clientes, setClientes] = useState([])
 
   async function buscarVeiculos() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
-    const dados = await resposta.json()
-    setVeiculos(dados)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
+      const dados = await resposta.json()
+      setVeiculos(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar veículos:', erro)
+      setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+      setTipoMensagem('erro')
+    }
   }
 
   async function cadastrarVeiculo(e) {
     e.preventDefault()
-
-    let url = `${import.meta.env.VITE_API_URL}/veiculos`
-    let metodo = 'POST'
-
-    if (veiculoEditando) {
-      url = `${import.meta.env.VITE_API_URL}/veiculos/${veiculoEditando.id}`
-      metodo = 'PUT'
-    }
-
-    const resposta = await fetch(url, {
-      method: metodo,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        cliente_id: clienteId,
-        tipo: tipoVeiculo,
-        placa: placa,
-        modelo: modelo,
-        cor: cor
+    try {
+      let url = `${import.meta.env.VITE_API_URL}/veiculos`
+      let metodo = 'POST'
+      if (veiculoEditando) {
+        url = `${import.meta.env.VITE_API_URL}/veiculos/${veiculoEditando.id}`
+        metodo = 'PUT'
+      }
+      const resposta = await fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente_id: clienteId,
+          tipo: tipoVeiculo,
+          placa: placa,
+          modelo: modelo,
+          cor: cor
+        })
       })
-    })
-
-    const dados = await resposta.json()
-
-    if (dados.erro) {
-      setMensagem(dados.erro)
+      const dados = await resposta.json()
+      if (dados.erro) {
+        setMensagem(dados.erro)
+        setTipoMensagem('erro')
+      } else {
+        buscarVeiculos()
+        setMensagem('Veículo salvo com sucesso!')
+        setTipoMensagem('sucesso')
+        setClienteId('')
+        setTipoVeiculo('')
+        setPlaca('')
+        setModelo('')
+        setCor('')
+        setVeiculoEditando(null)
+      }
+    } catch (erro) {
+      console.error('Erro ao cadastrar/editar veículo:', erro)
+      setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
       setTipoMensagem('erro')
-    } else {
-      buscarVeiculos()
-      setMensagem('Veículo salvo com sucesso!')
-      setTipoMensagem('sucesso')
-      setClienteId('')
-      setTipoVeiculo('')
-      setPlaca('')
-      setModelo('')
-      setCor('')
-      setVeiculoEditando(null)
     }
   }
 
   async function removerVeiculo(id) {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos/${id}`, { method: 'DELETE' })
-    const dados = await resposta.json()
-    if (dados.erro) {
-      setMensagem(dados.erro)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos/${id}`, { method: 'DELETE' })
+      const dados = await resposta.json()
+      if (dados.erro) {
+        setMensagem(dados.erro)
+        setTipoMensagem('erro')
+      } else {
+        buscarVeiculos()
+        setMensagem('Veículo removido com sucesso!')
+        setTipoMensagem('sucesso')
+      }
+    } catch (erro) {
+      console.error('Erro ao remover veículo:', erro)
+      setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
       setTipoMensagem('erro')
-    } else {
-      buscarVeiculos()
-      setMensagem('Veículo removido com sucesso!')
-      setTipoMensagem('sucesso')
     }
   }
 
@@ -86,9 +99,15 @@ function Veiculos({ setMensagem, setTipoMensagem }) {
   }
 
   async function buscarClientes() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
-    const dados = await resposta.json()
-    setClientes(dados)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
+      const dados = await resposta.json()
+      setClientes(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar clientes:', erro)
+      setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+      setTipoMensagem('erro')
+    }
   }
 
   useEffect(() => {

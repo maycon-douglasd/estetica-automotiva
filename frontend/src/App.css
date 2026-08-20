@@ -170,4 +170,16 @@ nav button.ativo {
     flex-wrap: wrap;
     min-width: auto;
   }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  form input,
+  form select,
+  form button {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

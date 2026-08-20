@@ -6,15 +6,25 @@ function UsoServicos() {
     const [veiculos, setVeiculos] = useState([])
 
     async function buscarUsoServicos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/uso-servicos`)
-        const dados = await resposta.json()
-        setUsoServicos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/uso-servicos`)
+            const dados = await resposta.json()
+            setUsoServicos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar uso de serviços:', erro)
+            console.error('Erro ao buscar uso de serviços')
+        }
     }
 
     async function buscarVeiculos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
-        const dados = await resposta.json()
-        setVeiculos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
+            const dados = await resposta.json()
+            setVeiculos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar veículos:', erro)
+            console.error('Erro ao buscar veículos')
+        }
     }
 
     useEffect(() => {

@@ -10,75 +10,97 @@ function Produtos({ setMensagem, setTipoMensagem }) {
     const [estoqueMinimo, setEstoqueMinimo] = useState('')
 
     async function buscarProdutos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`)
-        const dados = await resposta.json()
-        setProdutos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`)
+            const dados = await resposta.json()
+            setProdutos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar produtos:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function cadastrarProduto(e) {
         e.preventDefault()
-
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nome: nome,
-                tipo: tipo,
-                quantidade_atual: quantidadeAtual,
-                estoque_minimo: estoqueMinimo,
-                fornecedor_id: null
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nome: nome,
+                    tipo: tipo,
+                    quantidade_atual: quantidadeAtual,
+                    estoque_minimo: estoqueMinimo,
+                    fornecedor_id: null
+                })
             })
-        })
-
-        const dados = await resposta.json()
-
-        if (dados.erro) {
-            setMensagem(dados.erro)
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarProdutos()
+                setMensagem('Produto cadastrado com sucesso!')
+                setTipoMensagem('sucesso')
+                setNome('')
+                setTipo('')
+                setQuantidadeAtual('')
+                setEstoqueMinimo('')
+            }
+        } catch (erro) {
+            console.error('Erro ao cadastrar produto:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarProdutos()
-            setMensagem('Produto cadastrado com sucesso!')
-            setTipoMensagem('sucesso')
-            setNome('')
-            setTipo('')
-            setQuantidadeAtual('')
-            setEstoqueMinimo('')
         }
     }
 
     async function removerProduto(id) {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos/${id}`, { method: 'DELETE' })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/produtos/${id}`, { method: 'DELETE' })
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarProdutos()
+                setMensagem('Produto removido com sucesso!')
+                setTipoMensagem('sucesso')
+            }
+        } catch (erro) {
+            console.error('Erro ao remover produto:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarProdutos()
-            setMensagem('Produto removido com sucesso!')
-            setTipoMensagem('sucesso')
         }
     }
 
     async function registrarMovimentacao(produtoId, tipo, quantidade) {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/movimentacoes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                produto_id: produtoId,
-                tipo: tipo,
-                quantidade: quantidade
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/movimentacoes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    produto_id: produtoId,
+                    tipo: tipo,
+                    quantidade: quantidade
+                })
             })
-        })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+                return false
+            } else {
+                buscarProdutos()
+                setMensagem('Movimentação registrada com sucesso!')
+                setTipoMensagem('sucesso')
+                return true
+            }
+        } catch (erro) {
+            console.error('Erro ao registrar movimentação:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
             return false
-        } else {
-            buscarProdutos()
-            setMensagem('Movimentação registrada com sucesso!')
-            setTipoMensagem('sucesso')
-            return true
         }
     }
 

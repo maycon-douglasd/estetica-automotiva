@@ -12,21 +12,79 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
     const [ordemEditando, setOrdemEditando] = useState(null)
 
     async function buscarOrdens() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/ordem-servico`)
-        const dados = await resposta.json()
-        setOrdens(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/ordem-servico`)
+            const dados = await resposta.json()
+            setOrdens(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar ordens de serviço:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function buscarVeiculos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
-        const dados = await resposta.json()
-        setVeiculos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
+            const dados = await resposta.json()
+            setVeiculos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar veículos:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function buscarServicos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
-        const dados = await resposta.json()
-        setServicos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
+            const dados = await resposta.json()
+            setServicos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar serviços:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
+    }
+
+    async function cadastrarOrdem(e) {
+        e.preventDefault()
+        try {
+            let url = `${import.meta.env.VITE_API_URL}/ordem-servico`
+            let metodo = 'POST'
+            if (ordemEditando) {
+                url = `${import.meta.env.VITE_API_URL}/ordem-servico/${ordemEditando.id}`
+                metodo = 'PUT'
+            }
+            const resposta = await fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    veiculo_id: veiculoId,
+                    servico_id: servicoId,
+                    valor: valor,
+                    status: status
+                })
+            })
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarOrdens()
+                setMensagem('Ordem de serviço salva com sucesso!')
+                setTipoMensagem('sucesso')
+                setVeiculoId('')
+                setServicoId('')
+                setValor('')
+                setStatus('')
+                setOrdemEditando(null)
+            }
+        } catch (erro) {
+            console.error('Erro ao cadastrar/editar ordem de serviço:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     useEffect(() => {
@@ -34,40 +92,6 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
         buscarVeiculos()
         buscarServicos()
     }, [])
-
-    async function cadastrarOrdem(e) {
-        e.preventDefault()
-        let url = `${import.meta.env.VITE_API_URL}/ordem-servico`
-        let metodo = 'POST'
-        if (ordemEditando) {
-            url = `${import.meta.env.VITE_API_URL}/ordem-servico/${ordemEditando.id}`
-            metodo = 'PUT'
-        }
-        const resposta = await fetch(url, {
-            method: metodo,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                veiculo_id: veiculoId,
-                servico_id: servicoId,
-                valor: valor,
-                status: status
-            })
-        })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
-            setTipoMensagem('erro')
-        } else {
-            buscarOrdens()
-            setMensagem('Ordem de serviço salva com sucesso!')
-            setTipoMensagem('sucesso')
-            setVeiculoId('')
-            setServicoId('')
-            setValor('')
-            setStatus('')
-            setOrdemEditando(null)
-        }
-    }
 
     function iniciarEdicaoOrdem(ordem) {
         setVeiculoId(ordem.veiculo_id)
@@ -104,7 +128,7 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
                     <option value="">Selecione o status</option>
 
                     <option value="em andamento">Em andamento</option>
-                    
+
                     <option value="concluído">Concluído</option>
                 </select>
 
@@ -130,7 +154,7 @@ function OrdemServico({ setMensagem, setTipoMensagem }) {
                         <p>{new Date(ordem.data_entrada).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</p>
 
                         <p>{ordem.data_saida ? new Date(ordem.data_saida).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : 'Ainda em andamento'}</p>
-                        
+
                         <div className="acoes">
                             <button onClick={() => iniciarEdicaoOrdem(ordem)}>Editar</button>
                         </div>

@@ -8,46 +8,64 @@ function Despesas({ setMensagem, setTipoMensagem }) {
     const [valor, setValor] = useState('')
 
     async function buscarDespesas() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`)
-        const dados = await resposta.json()
-        setDespesas(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`)
+            const dados = await resposta.json()
+            setDespesas(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar despesas:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function cadastrarDespesa(e) {
         e.preventDefault()
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                descricao: descricao,
-                categoria: categoria,
-                valor: valor
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    descricao: descricao,
+                    categoria: categoria,
+                    valor: valor
+                })
             })
-        })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarDespesas()
+                setMensagem('Despesa cadastrada com sucesso!')
+                setTipoMensagem('sucesso')
+                setDescricao('')
+                setCategoria('')
+                setValor('')
+            }
+        } catch (erro) {
+            console.error('Erro ao cadastrar despesa:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarDespesas()
-            setMensagem('Despesa cadastrada com sucesso!')
-            setTipoMensagem('sucesso')
-            setDescricao('')
-            setCategoria('')
-            setValor('')
         }
     }
 
     async function removerDespesa(id) {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/${id}`, { method: 'DELETE' })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/${id}`, { method: 'DELETE' })
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarDespesas()
+                setMensagem('Despesa removida com sucesso!')
+                setTipoMensagem('sucesso')
+            }
+        } catch (erro) {
+            console.error('Erro ao remover despesa:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarDespesas()
-            setMensagem('Despesa removida com sucesso!')
-            setTipoMensagem('sucesso')
         }
     }
 
@@ -96,7 +114,7 @@ function Despesas({ setMensagem, setTipoMensagem }) {
                         <p>{despesa.categoria}</p>
 
                         <p>R$ {despesa.valor}</p>
-                        
+
                         <div className="acoes">
                             <button className="btn-remover" onClick={() => removerDespesa(despesa.id)}>
                                 Remover

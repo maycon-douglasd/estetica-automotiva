@@ -8,50 +8,74 @@ function Clientes({ setMensagem, setTipoMensagem }) {
     const [veiculos, setVeiculos] = useState([])
 
     async function buscarVeiculos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
-        const dados = await resposta.json()
-        setVeiculos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/veiculos`)
+            const dados = await resposta.json()
+            setVeiculos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar veículos:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function buscarClientes() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
-        const dados = await resposta.json()
-        setClientes(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`)
+            const dados = await resposta.json()
+            setClientes(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar clientes:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function cadastrarCliente(e) {
         e.preventDefault()
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nome: nomeCliente,
-                telefone: telefone
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nome: nomeCliente,
+                    telefone: telefone
+                })
             })
-        })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarClientes()
+                setMensagem('Cliente cadastrado com sucesso!')
+                setTipoMensagem('sucesso')
+                setNomeCliente('')
+                setTelefone('')
+            }
+        } catch (erro) {
+            console.error('Erro ao cadastrar cliente:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarClientes()
-            setMensagem('Cliente cadastrado com sucesso!')
-            setTipoMensagem('sucesso')
-            setNomeCliente('')
-            setTelefone('')
         }
     }
 
     async function removerCliente(id) {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes/${id}`, { method: 'DELETE' })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/clientes/${id}`, { method: 'DELETE' })
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarClientes()
+                setMensagem('Cliente removido com sucesso!')
+                setTipoMensagem('sucesso')
+            }
+        } catch (erro) {
+            console.error('Erro ao remover cliente:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarClientes()
-            setMensagem('Cliente removido com sucesso!')
-            setTipoMensagem('sucesso')
         }
     }
 
@@ -87,7 +111,7 @@ function Clientes({ setMensagem, setTipoMensagem }) {
                 {clientes.map((cliente) => (
                     <div key={cliente.id} className="card">
                         <p>{cliente.nome}</p>
-                        
+
                         <p>{cliente.telefone}</p>
 
                         {veiculos.filter((veiculo) => veiculo.cliente_id === cliente.id).map((veiculo) => (

@@ -8,51 +8,69 @@ function Servicos({ setMensagem, setTipoMensagem }) {
     const [servicoEditando, setServicoEditando] = useState(null)
 
     async function buscarServicos() {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
-        const dados = await resposta.json()
-        setServicos(dados)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos`)
+            const dados = await resposta.json()
+            setServicos(dados)
+        } catch (erro) {
+            console.error('Erro ao buscar serviços:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
+            setTipoMensagem('erro')
+        }
     }
 
     async function cadastrarServico(e) {
         e.preventDefault()
-        let url = `${import.meta.env.VITE_API_URL}/servicos`
-        let metodo = 'POST'
-        if (servicoEditando) {
-            url = `${import.meta.env.VITE_API_URL}/servicos/${servicoEditando.id}`
-            metodo = 'PUT'
-        }
-        const resposta = await fetch(url, {
-            method: metodo,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nome: nomeServico,
-                preco: preco
+        try {
+            let url = `${import.meta.env.VITE_API_URL}/servicos`
+            let metodo = 'POST'
+            if (servicoEditando) {
+                url = `${import.meta.env.VITE_API_URL}/servicos/${servicoEditando.id}`
+                metodo = 'PUT'
+            }
+            const resposta = await fetch(url, {
+                method: metodo,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nome: nomeServico,
+                    preco: preco
+                })
             })
-        })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarServicos()
+                setMensagem('Serviço salvo com sucesso!')
+                setTipoMensagem('sucesso')
+                setNomeServico('')
+                setPreco('')
+                setServicoEditando(null)
+            }
+        } catch (erro) {
+            console.error('Erro ao cadastrar/editar serviço:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarServicos()
-            setMensagem('Serviço salvo com sucesso!')
-            setTipoMensagem('sucesso')
-            setNomeServico('')
-            setPreco('')
-            setServicoEditando(null)
         }
     }
 
     async function removerServico(id) {
-        const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos/${id}`, { method: 'DELETE' })
-        const dados = await resposta.json()
-        if (dados.erro) {
-            setMensagem(dados.erro)
+        try {
+            const resposta = await fetch(`${import.meta.env.VITE_API_URL}/servicos/${id}`, { method: 'DELETE' })
+            const dados = await resposta.json()
+            if (dados.erro) {
+                setMensagem(dados.erro)
+                setTipoMensagem('erro')
+            } else {
+                buscarServicos()
+                setMensagem('Serviço removido com sucesso!')
+                setTipoMensagem('sucesso')
+            }
+        } catch (erro) {
+            console.error('Erro ao remover serviço:', erro)
+            setMensagem('Não foi possível conectar ao servidor. Tente novamente em alguns segundos.')
             setTipoMensagem('erro')
-        } else {
-            buscarServicos()
-            setMensagem('Serviço removido com sucesso!')
-            setTipoMensagem('sucesso')
         }
     }
 

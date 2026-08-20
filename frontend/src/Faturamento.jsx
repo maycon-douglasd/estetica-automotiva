@@ -10,27 +10,47 @@ function Faturamento() {
 
 
   async function buscarFaturamentoMes() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento`)
-    const dados = await resposta.json()
-    setFaturamentoMes(dados)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento`)
+      const dados = await resposta.json()
+      setFaturamentoMes(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar faturamento mensal:', erro)
+      console.error('Erro ao buscar faturamento mensal')
+    }
   }
 
   async function buscarFaturamentoDia() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/dia`)
-    const dados = await resposta.json()
-    setFaturamentoDia(dados)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/dia`)
+      const dados = await resposta.json()
+      setFaturamentoDia(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar faturamento diário:', erro)
+      console.error('Erro ao buscar faturamento diário')
+    }
   }
 
   async function buscarFaturamentoSemana() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/semana`)
-    const dados = await resposta.json()
-    setFaturamentoSemana(dados)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/faturamento/semana`)
+      const dados = await resposta.json()
+      setFaturamentoSemana(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar faturamento semanal:', erro)
+      console.error('Erro ao buscar faturamento semanal')
+    }
   }
 
   async function buscarDespesasTotal() {
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/total`)
-    const dados = await resposta.json()
-    setDespesasTotal(Number(dados.despesas_total) || 0)
+    try {
+      const resposta = await fetch(`${import.meta.env.VITE_API_URL}/despesas/total`)
+      const dados = await resposta.json()
+      setDespesasTotal(Number(dados.despesas_total) || 0)
+    } catch (erro) {
+      console.error('Erro ao buscar total de despesas:', erro)
+      console.error('Erro ao buscar total de despesas')
+    }
   }
 
   const faturamentoBrutoTotal = faturamentoMes.reduce((total, item) => total + Number(item.faturamento_total), 0)
@@ -82,7 +102,7 @@ function Faturamento() {
       </div>
 
       <h2>Faturamento por dia</h2>
-      
+
       <ResponsiveContainer width="100%" height={alturaGrafico}>
         <BarChart data={dadosGraficoDia}>
           <XAxis dataKey="dia" stroke="#e4e6eb" />
