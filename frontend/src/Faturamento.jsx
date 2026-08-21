@@ -57,17 +57,17 @@ function Faturamento() {
   const faturamentoLiquido = faturamentoBrutoTotal - despesasTotal
 
   const dadosGraficoDia = faturamentoDia.map((item) => ({
-    dia: new Date(item.date).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    dia: new Date(item.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }),
     valor: Number(item.faturamento_total)
   }))
 
   const dadosGraficoSemana = faturamentoSemana.map((item) => ({
-    semana: new Date(item.date_trunc).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }),
+    semana: new Date(item.date_trunc).toLocaleDateString('pt-BR', { timeZone: 'UTC' }),
     valor: Number(item.faturamento_total)
   }))
 
   const dadosGraficoMes = faturamentoMes.map((item) => ({
-    mes: new Date(item.date_trunc).toLocaleDateString('pt-BR', { month: 'short', timeZone: 'America/Sao_Paulo' }),
+    mes: new Date(item.date_trunc).toLocaleDateString('pt-BR', { month: 'short', timeZone: 'UTC' }),
     valor: Number(item.faturamento_total)
   }))
 
