@@ -191,7 +191,9 @@ app.get('/ordem-servico', async (req, res) => {
 app.post('/ordem-servico', async (req, res) => {
   try {
     const resultado = await pool.query(
-      'INSERT INTO ordem_servico (veiculo_id, servico_id, valor, status, data_entrada) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
+      `INSERT INTO ordem_servico (veiculo_id, servico_id, valor, status, data_entrada, data_saida) 
+       VALUES ($1, $2, $3, $4, NOW(), CASE WHEN $4 = 'concluído' THEN NOW() ELSE NULL END) 
+       RETURNING *`,
       [req.body.veiculo_id, req.body.servico_id, req.body.valor, req.body.status]
     );
     res.json(resultado.rows[0]);
@@ -265,7 +267,7 @@ app.get('/despesas/total', async (req, res) => {
 
 app.get('/faturamento', async (req, res) => {
   try {
-    const resultado = await pool.query("SELECT DATE_TRUNC('month', data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' GROUP BY DATE_TRUNC('month', data_saida)");
+    const resultado = await pool.query("SELECT DATE_TRUNC('month', data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' AND data_saida IS NOT NULL GROUP BY DATE_TRUNC('month', data_saida)");
     res.json(resultado.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -274,7 +276,7 @@ app.get('/faturamento', async (req, res) => {
 
 app.get('/faturamento/dia', async (req, res) => {
   try {
-    const resultado = await pool.query("SELECT DATE(data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' GROUP BY DATE(data_saida)");
+    const resultado = await pool.query("SELECT DATE(data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' AND data_saida IS NOT NULL GROUP BY DATE(data_saida)");
     res.json(resultado.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -283,7 +285,7 @@ app.get('/faturamento/dia', async (req, res) => {
 
 app.get('/faturamento/semana', async (req, res) => {
   try {
-    const resultado = await pool.query("SELECT DATE_TRUNC('week', data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' GROUP BY DATE_TRUNC('week', data_saida)");
+    const resultado = await pool.query("SELECT DATE_TRUNC('week', data_saida), SUM(valor) AS faturamento_total FROM ordem_servico WHERE status = 'concluído' AND data_saida IS NOT NULL GROUP BY DATE_TRUNC('week', data_saida)");
     res.json(resultado.rows);
   } catch (err) {
     res.status(500).json({ erro: err.message });
